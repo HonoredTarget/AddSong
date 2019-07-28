@@ -28,23 +28,13 @@ int main(int argc, char const *argv[]) {
     return 0;
   }
   // Probe for other webm file
-  bool newDirectoryMade = false;
-  if (!(exec("dir *.webm") == "dir: cannot access '*.webm': No such file or directory\n")) {
-    newDirectoryMade = true;
-    cout << "Making temperary directory." << endl;
-    system("mkdir tmp-x");
-    cout << "Moving into directory" << endl;
-    system("cd tmp-x");
-  }
 
   string youtubeLink = argv[1];
-  string ytdl_command = "youtube-dl -f bestaudio " + youtubeLink;
+  string ytdl_command = "youtube-dl -f bestaudio --output \"tmp-x.webm\" " + youtubeLink;
   command = ytdl_command.c_str();
   system(command);
-  string fName = exec("dir *.webm");
-  fName = fName.substr(0, fName.size()-1);
 
-  string remove = "rm " + fName;
+  string remove = "rm tmp-x.webm";
   string songName, songAlbum, songArtist;
   string cofirmation;
   //system("clear");
@@ -69,20 +59,12 @@ int main(int argc, char const *argv[]) {
   string mkdirs = "mkdir -p " + filepath;
   command = mkdirs.c_str();
   system(command);
-  fName = fixString(fName);
   string fn = fixString(songName) + ".webm";
-  string move = "mv " + wd + "/" + fName + " " + filepath + fn;
+  string move = "mv " + wd + "/tmp-x.webm" + " " + filepath + fn;
   command = move.c_str();
   system(command);
 
   cout << "Song Sucessfully Added!" << endl;
-
-  if (newDirectoryMade) {
-    cout << "Backing from Directory" << endl;
-    system("cd ..");
-    cout << "Removing Temp Directory" << endl;
-    system("rm -rf tmp-x");
-  }
 
   return 0;
 }
